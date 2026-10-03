@@ -1,4 +1,4 @@
-import { corpus, retrieve, relevantExcerpt } from '@/lib/corpus';
+import { corpus, retrieve, relevantExcerpt, hasExcludedAttribution } from '@/lib/corpus';
 export async function POST(request: Request) {
     const origin = request.headers.get('origin');
     if (origin && origin !== new URL(request.url).origin)
@@ -31,6 +31,8 @@ export async function POST(request: Request) {
                 throw new Error('Generation service returned HTTP ' + r.status);
             const data: any = await r.json();
             const generated = data.output?.flatMap((o: any) => o.content || []).filter((c: any) => c.type === 'output_text').map((c: any) => c.text).join('\n');
+            if (generated && hasExcludedAttribution(generated))
+                throw new Error('Answer contains excluded attribution');
             if (!generated)
                 throw new Error('No generated answer returned');
             const refs = [...generated.matchAll(/\[(\d+)\]/g)].map((m: any) => Number(m[1]));

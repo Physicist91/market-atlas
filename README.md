@@ -1,6 +1,6 @@
 # Manufacturing Atlas
 
-An independent advanced manufacturing research application inspired by Wohlers' public market intelligence approach. Built for an ASTM Singapore interview demonstration. Not affiliated with Wohlers Associates or ASTM.
+An independent advanced manufacturing research application inspired by Wohlers' public market intelligence approach. Not affiliated with Wohlers Associates.
 
 ## Included
 
@@ -10,7 +10,6 @@ An independent advanced manufacturing research application inspired by Wohlers' 
 - Topic-filtered BM25 retrieval over 220-word chunks with 50-word overlap, evidence excerpts, retrieval trace, and Markdown brief export.
 - Optional OpenAI Responses API generation with supplied-evidence instructions, abstention, source-ID validation, and retrieval fallback.
 - Inspectable source manifest and JSON export.
-- Twenty-minute interview walkthrough covering collection, analysis, visualization, RAG, and project management. Download the walkthrough in the app.
 - Responsive UI and page-scoped WebMCP research/refresh actions.
 
 ## Run locally
@@ -47,7 +46,3 @@ Market baseline: the public [Wohlers 2026 release](https://wohlersassociates.com
 The HTML parser is a lightweight heuristic, not a full browser extractor. Public index summaries do not establish access to report bodies. No paid content is bypassed. Crossref metadata is bibliographic; records without abstracts do not establish study findings.
 
 Without a key, the assistant returns relevant excerpts and labels itself retrieval-only. No embeddings, LLM training, or fine-tuning are performed. Citation checks validate source identifiers, not factual entailment. In production, add semantic retrieval, durable versioned source storage, per-user access controls and rate limits, licensed sources, a labeled evaluation dataset, citation entailment checks, and human analyst review.
-
-## Interview use
-
-Use the walkthrough in the application. Replace hypothetical team and tool examples with your actual project history. This application is evidence of an implemented prototype, not proof of prior employment experience. The job-description attachment was not available; scope follows the pasted interview requirements.

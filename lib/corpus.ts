@@ -65,6 +65,12 @@ catch {
     return false;
 } }).sort((a, b) => b.path.length - a.path.length); return !matches.length || matches[0].allow; }
 export function cleanHtml(html: string) { let content = html.match(/<article\b[^>]*>([\s\S]*?)<\/article>/i)?.[1] || html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/i)?.[1] || html; return content.replace(/<(script|style|nav|header|footer|noscript)\b[^>]*>[\s\S]*?<\/\1>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;|&#160;/g, ' ').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/\s+/g, ' ').trim().slice(0, 24000); }
+// Keep excluded personal and institutional attribution out of collected passages.
+const excludedAttribution = /\b(?:interviews?|mahdi(?:\s+jamshid)?|astm(?:\s+international)?)\b/i;
+export function hasExcludedAttribution(text: string) { return excludedAttribution.test(text); }
+export function omitExcludedAttribution(text: string) {
+    return text.split(/(?<=[.!?])\s+/).filter(sentence => !hasExcludedAttribution(sentence)).join(' ').trim();
+}
 let cached: Source[] = seed;
 let checkedAt: string | null = null;
 let lastAttempt = 0;
@@ -77,7 +83,7 @@ export async function refresh() { if (pending)
         if (!await permitted(s.url))
             throw new Error('Collection restricted by robots.txt');
         const html = await boundedFetch(s.url);
-        const text = cleanHtml(html);
+        const text = omitExcludedAttribution(cleanHtml(html));
         if (text.length < 150 || /enable javascript|checking your browser|just a moment/i.test(text.slice(0, 400)))
             throw new Error('Page content unavailable');
         const hash = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)))).map(b => b.toString(16).padStart(2, '0')).join('');
@@ -92,7 +98,7 @@ export async function refresh() { if (pending)
     const url = 'https://api.crossref.org/works?query.title=additive%20manufacturing&filter=type:journal-article,until-pub-date:' + new Date().toISOString().slice(0, 10) + '&sort=published&order=desc&rows=30';
     const data = JSON.parse(await boundedFetch(url));
     for (const item of data.message.items || []) {
-        if (!/additive manufactur|3[dD][ -]print/i.test(String(item.title?.[0] || '')))
+        if (hasExcludedAttribution(String(item.title?.[0] || '') + ' ' + String(item.publisher || '')) || !/additive manufactur|3[dD][ -]print/i.test(String(item.title?.[0] || '')))
             continue;
         if (results.filter(s => s.kind === 'API').length >= 5)
             break;
@@ -102,7 +108,7 @@ export async function refresh() { if (pending)
         const doi = String(item.DOI || '');
         if (!/^10\.\d{4,9}\/[\S]+$/.test(doi))
             continue;
-        results.push({ id: 'crossref-' + doi, title: String(item.title?.[0] || 'AM research'), publisher: String(item.publisher || 'Crossref'), url: 'https://doi.org/' + encodeURIComponent(doi), topic: 'Research literature', date, fetchedAt: new Date().toISOString(), text: String(item.title?.[0] || '') + '. ' + (item.abstract ? cleanHtml(item.abstract) : 'Bibliographic metadata only; no abstract available. This record cannot support detailed claims about results.'), status: 'live', kind: 'API' });
+        results.push({ id: 'crossref-' + doi, title: String(item.title?.[0] || 'AM research'), publisher: String(item.publisher || 'Crossref'), url: 'https://doi.org/' + encodeURIComponent(doi), topic: 'Research literature', date, fetchedAt: new Date().toISOString(), text: String(item.title?.[0] || '') + '. ' + (item.abstract ? omitExcludedAttribution(cleanHtml(item.abstract)) : 'Bibliographic metadata only; no abstract available. This record cannot support detailed claims about results.'), status: 'live', kind: 'API' });
     }
 }
 catch (e) {
