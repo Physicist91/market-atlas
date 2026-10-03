@@ -64,7 +64,7 @@ async function permitted(url: string) { const u = new URL(url); if (!robots.has(
 catch {
     return false;
 } }).sort((a, b) => b.path.length - a.path.length); return !matches.length || matches[0].allow; }
-export function cleanHtml(html: string) { let content = html.match(/<article\b[^>]*>([\s\S]*?)<\/article>/i)?.[1] || html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/i)?.[1] || html; return content.replace(/<(script|style|nav|header|footer|noscript)\b[^>]*>[\s\S]*?<\/\1>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;|&#160;/g, ' ').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/\s+/g, ' ').trim().slice(0, 24000); }
+export function cleanHtml(html: string) { const content = html.match(/<article\b[^>]*>([\s\S]*?)<\/article>/i)?.[1] || html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/i)?.[1] || html; return content.replace(/<(script|style|nav|header|footer|noscript)\b[^>]*>[\s\S]*?<\/\1>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;|&#160;/g, ' ').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/\s+/g, ' ').trim().slice(0, 24000); }
 // Keep excluded personal and institutional attribution out of collected passages.
 const excludedAttribution = /\b(?:interviews?|mahdi(?:\s+jamshid)?|astm(?:\s+international)?)\b/i;
 export function hasExcludedAttribution(text: string) { return excludedAttribution.test(text); }

@@ -1,0 +1,8 @@
+{
+  "name": "Manufacturing Atlas",
+  "description": "Source-backed market intelligence for advanced manufacturing.",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

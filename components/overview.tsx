@@ -1,15 +1,219 @@
 "use client";
-import { Activity, BookOpen, Globe2, Layers3, MessageSquare, RefreshCw, Sparkles } from "lucide-react";
+import { Activity, BarChart3, BookOpen, Database, Globe2, Layers3, MessageSquare, RefreshCw, Sparkles } from "lucide-react";
+
 export default function Overview({ setView, refresh, busy, checkedAt, live }: {
     setView: (s: string) => void;
     refresh: () => void;
     busy: boolean;
     checkedAt: string | null;
     live: number;
-}) { return <div className="page"><div className="page-heading"><div className="eyebrow">THE MANUFACTURING LANDSCAPE</div><h1>Market overview<span className="period">2025 baseline</span></h1><p>The signals shaping the next chapter of additive manufacturing.</p></div><div className="freshness"><span>{checkedAt ? "Sources checked " + new Date(checkedAt).toLocaleString("en-SG", { timeZone: "Asia/Singapore" }) + " SGT" : "Public-source baseline · refreshing on open"}</span><b>{live} live source records</b></div><div className="overview-actions"><div className="filter-chip"><Globe2 size={16}/> Global market</div><div className="filter-chip">Additive manufacturing</div><button className="button outline" onClick={refresh} disabled={busy}><RefreshCw size={16} className={busy ? "spin" : ""}/> {busy ? "Collecting…" : "Refresh sources"}</button></div><div className="metrics"><Metric label="GLOBAL AM REVENUE" value="$24.2B" detail="2025 · Wohlers Report 2026" change="+10.9% YoY"/><Metric label="PRINTING SERVICES SHARE" value="48%" detail="Largest revenue segment" change="15.5% segment growth"/><Metric label="ASIA-PACIFIC GROWTH" value="19.8%" detail="Average company revenue growth" change="2025 survey measure"/><Metric label="SYSTEM SALES GROWTH" value="3.6%" detail="2025 · hardware recovery" change="Below services growth"/></div><div className="dashboard-grid"><section className="panel"><div className="panel-header"><div><div className="eyebrow">MARKET STRUCTURE</div><h2>Where value is being created</h2></div><span className="badge">2025</span></div><div className="chart-layout"><div className="donut"><div><small>Global AM market</small><strong>$24.2B</strong><span>2025 revenue</span></div></div><div className="legend">{[['Printing services', 48, '#2c5ce8'], ['Systems & servicing', 26, '#7a99f6'], ['Materials', 20, '#a9bafa'], ['Software', 6, '#e0e7ff']].map(([label, value, color]) => <div className="legend-row" key={label}><span className="swatch" style={{ background: String(color) }}/><span>{label}</span><b>{value}%</b></div>)}</div></div><div className="chart-foot"><a href="https://wohlersassociates.com/press-releases/new-wohlers-report-2026-values-additive-manufacturing-market-at-24-2b/" target="_blank" rel="noreferrer">Source: Wohlers Report 2026 public release · Revenue segments</a></div></section><section className="panel"><div className="panel-header"><div><div className="eyebrow">REGIONAL MOMENTUM</div><h2>Growth is uneven</h2></div><Globe2 size={20} className="muted"/></div><div className="bars">{[['Asia-Pacific', 19.8], ['Americas', 12.6], ['EMEA', 9]].map(([label, n]) => <div className="bar-row" key={label}><div><span>{label}</span><b>{n}%</b></div><div className="bar-track"><div style={{ width: Number(n) / 22 * 100 + '%' }}/></div></div>)}</div><p className="chart-foot">Average company revenue growth, not regional market share. Survey coverage affects comparison.</p></section></div><div className="dashboard-grid lower"><section className="panel"><div className="panel-header"><div><div className="eyebrow">ON THE RADAR</div><h2>Research signals</h2></div><button className="text-button" onClick={() => setView('sources')}>Explore sources</button></div><div className="signal"><span className="signal-icon"><Activity size={19}/></span><div><span className="tag">MARKET SHIFT</span><h3>Production services outpace equipment sales</h3><p>Test whether utilization and production demand explain the growth gap.</p><small>Wohlers Associates · 2026 report release</small></div></div><div className="signal"><span className="signal-icon purple"><Layers3 size={19}/></span><div><span className="tag">COMPETITIVE LANDSCAPE</span><h3>Low-cost systems redraw market boundaries</h3><p>Compare printer farms and industrial systems by application, quality, and economics.</p><small>Wohlers Associates · January 2026</small></div></div></section><section className="assistant-card"><span className="ai-icon"><Sparkles size={22}/></span><div className="eyebrow">YOUR RESEARCH PARTNER</div><h2>Turn signals into<br />an informed perspective.</h2><p>Ask a question. Inspect the evidence. See what we know—and what needs more research.</p><button className="button white" onClick={() => setView('assistant')}><MessageSquare size={17}/> Open research assistant</button><div className="assistant-footer"><BookOpen size={15}/> Evidence first. Sources always visible.</div></section></div><p className="disclaimer">Public-source research prototype inspired by Wohlers' intelligence approach. Independent of Wohlers Associates. Annual figures are a dated baseline, not live market estimates.</p></div>; }
+}) {
+    return (
+        <div className="page">
+            <div className="page-heading">
+                <div className="eyebrow">THE MANUFACTURING LANDSCAPE</div>
+                <h1>Market overview<span className="period">2025 baseline</span></h1>
+                <p>The signals shaping the next chapter of additive manufacturing.</p>
+            </div>
+
+            <div className="overview-nav-strip" role="tablist" aria-label="Section Navigation">
+                <button
+                    type="button"
+                    role="tab"
+                    aria-selected="true"
+                    className="overview-tab-btn active"
+                    onClick={() => setView('overview')}
+                >
+                    <BarChart3 size={16}/>
+                    <span>Market overview</span>
+                </button>
+                <button
+                    type="button"
+                    role="tab"
+                    aria-selected="false"
+                    className="overview-tab-btn"
+                    onClick={() => setView('assistant')}
+                >
+                    <Sparkles size={16}/>
+                    <span>Research Assistant</span>
+                </button>
+                <button
+                    type="button"
+                    role="tab"
+                    aria-selected="false"
+                    className="overview-tab-btn"
+                    onClick={() => setView('sources')}
+                >
+                    <BookOpen size={16}/>
+                    <span>Sources & Insights</span>
+                </button>
+                <button
+                    type="button"
+                    role="tab"
+                    aria-selected="false"
+                    className="overview-tab-btn"
+                    onClick={() => setView('pipeline')}
+                >
+                    <Database size={16}/>
+                    <span>Data Pipeline</span>
+                </button>
+            </div>
+
+            <div className="freshness">
+                <span>{checkedAt ? "Sources checked " + new Date(checkedAt).toLocaleString("en-SG", { timeZone: "Asia/Singapore" }) + " SGT" : "Public-source baseline · refreshing on open"}</span>
+                <b>{live} live source records</b>
+            </div>
+
+            <div className="overview-actions">
+                <div className="filter-chip static-chip"><Globe2 size={16}/> Global market</div>
+                <div className="filter-chip static-chip">Additive manufacturing</div>
+                <button
+                    type="button"
+                    className="button outline"
+                    onClick={refresh}
+                    disabled={busy}
+                >
+                    <RefreshCw size={15} className={busy ? "spin" : ""}/>
+                    <span>{busy ? "Collecting…" : "Refresh sources"}</span>
+                </button>
+            </div>
+
+            <div className="metrics">
+                <Metric label="GLOBAL AM REVENUE" value="$24.2B" detail="2025 · Wohlers Report 2026" change="+10.9% YoY"/>
+                <Metric label="PRINTING SERVICES SHARE" value="48%" detail="Largest revenue segment" change="15.5% segment growth"/>
+                <Metric label="ASIA-PACIFIC GROWTH" value="19.8%" detail="Average company revenue growth" change="2025 survey measure"/>
+                <Metric label="SYSTEM SALES GROWTH" value="3.6%" detail="2025 · hardware recovery" change="Below services growth"/>
+            </div>
+
+            <div className="dashboard-grid">
+                <section className="panel">
+                    <div className="panel-header">
+                        <div>
+                            <div className="eyebrow">MARKET STRUCTURE</div>
+                            <h2>Where value is being created</h2>
+                        </div>
+                        <span className="badge">2025</span>
+                    </div>
+                    <div className="chart-layout">
+                        <div className="donut">
+                            <div>
+                                <small>Global AM market</small>
+                                <strong>$24.2B</strong>
+                                <span>2025 revenue</span>
+                            </div>
+                        </div>
+                        <div className="legend">
+                            {[
+                                ['Printing services', 48, '#2c5ce8'],
+                                ['Systems & servicing', 26, '#7a99f6'],
+                                ['Materials', 20, '#a9bafa'],
+                                ['Software', 6, '#e0e7ff']
+                            ].map(([label, value, color]) => (
+                                <div className="legend-row" key={String(label)}>
+                                    <span className="swatch" style={{ background: String(color) }}/>
+                                    <span>{String(label)}</span>
+                                    <b>{String(value)}%</b>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="chart-foot">
+                        <a href="https://wohlersassociates.com/press-releases/new-wohlers-report-2026-values-additive-manufacturing-market-at-24-2b/" target="_blank" rel="noreferrer">
+                            Source: Wohlers Report 2026 public release · Revenue segments
+                        </a>
+                    </div>
+                </section>
+
+                <section className="panel">
+                    <div className="panel-header">
+                        <div>
+                            <div className="eyebrow">REGIONAL MOMENTUM</div>
+                            <h2>Growth is uneven</h2>
+                        </div>
+                        <Globe2 size={20} className="muted"/>
+                    </div>
+                    <div className="bars">
+                        {[
+                            ['Asia-Pacific', 19.8],
+                            ['Americas', 12.6],
+                            ['EMEA', 9]
+                        ].map(([label, n]) => (
+                            <div className="bar-row" key={String(label)}>
+                                <div><span>{String(label)}</span><b>{String(n)}%</b></div>
+                                <div className="bar-track">
+                                    <div style={{ width: (Number(n) / 22) * 100 + '%' }}/>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    <p className="chart-foot">Average company revenue growth, not regional market share. Survey coverage affects comparison.</p>
+                </section>
+            </div>
+
+            <div className="dashboard-grid lower">
+                <section className="panel">
+                    <div className="panel-header">
+                        <div>
+                            <div className="eyebrow">ON THE RADAR</div>
+                            <h2>Research signals</h2>
+                        </div>
+                        <button type="button" className="text-button" onClick={() => setView('sources')}>
+                            Explore sources →
+                        </button>
+                    </div>
+                    <div className="signal">
+                        <span className="signal-icon"><Activity size={19}/></span>
+                        <div>
+                            <span className="tag">MARKET SHIFT</span>
+                            <h3>Production services outpace equipment sales</h3>
+                            <p>Test whether utilization and production demand explain the growth gap.</p>
+                            <small>Wohlers Associates · 2026 report release</small>
+                        </div>
+                    </div>
+                    <div className="signal">
+                        <span className="signal-icon purple"><Layers3 size={19}/></span>
+                        <div>
+                            <span className="tag">COMPETITIVE LANDSCAPE</span>
+                            <h3>Low-cost systems redraw market boundaries</h3>
+                            <p>Compare printer farms and industrial systems by application, quality, and economics.</p>
+                            <small>Wohlers Associates · January 2026</small>
+                        </div>
+                    </div>
+                </section>
+
+                <section className="assistant-card">
+                    <span className="ai-icon"><Sparkles size={22}/></span>
+                    <div className="eyebrow">YOUR RESEARCH PARTNER</div>
+                    <h2>Turn signals into<br />an informed perspective.</h2>
+                    <p>Ask a question. Inspect the evidence. See what we know—and what needs more research.</p>
+                    <button type="button" className="button white" onClick={() => setView('assistant')}>
+                        <MessageSquare size={17}/> Open research assistant
+                    </button>
+                    <div className="assistant-footer">
+                        <BookOpen size={15}/> Evidence first. Sources always visible.
+                    </div>
+                </section>
+            </div>
+
+            <p className="disclaimer">
+                Public-source research prototype inspired by Wohlers' intelligence approach. Independent of Wohlers Associates. Annual figures are a dated baseline, not live market estimates.
+            </p>
+        </div>
+    );
+}
+
 function Metric({ label, value, detail, change }: {
     label: string;
     value: string;
     detail: string;
     change: string;
-}) { return <section className="metric"><span>{label}</span><strong>{value}</strong><div className="metric-change">{change}</div><small>{detail}</small></section>; }
+}) {
+    return (
+        <section className="metric">
+            <span>{label}</span>
+            <strong>{value}</strong>
+            <div className="metric-change">{change}</div>
+            <small>{detail}</small>
+        </section>
+    );
+}
