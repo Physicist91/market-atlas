@@ -114,8 +114,18 @@ export async function refresh() { if (pending)
 catch (e) {
     results.push({ id: 'crossref-error', title: 'Crossref research discovery', publisher: 'Crossref', url: 'https://api.crossref.org', topic: 'Research literature', date: null, fetchedAt: null, text: 'The live research discovery API is currently unavailable. No research results were inferred.', status: 'unavailable', kind: 'API', error: e instanceof Error ? e.message : 'API unavailable' });
 } cached = results; checkedAt = new Date().toISOString(); return snapshot(); })().finally(() => { pending = null; }); return pending; }
-export async function corpus() { if (!checkedAt || Date.now() - Date.parse(checkedAt) > 900000)
-    return refresh(); return snapshot(); }
+export async function corpus() {
+    if (!checkedAt) {
+        if (!pending && Date.now() - lastAttempt >= 60000) {
+            void refresh().catch(() => {});
+        }
+    } else if (Date.now() - Date.parse(checkedAt) > 900000) {
+        if (!pending && Date.now() - lastAttempt >= 60000) {
+            void refresh().catch(() => {});
+        }
+    }
+    return snapshot();
+}
 const stop = new Set('a an the is are was were how why what which of in to and or for on by with from this that does do have has us me tell about can more'.split(' '));
 export function tokens(text: string) { return text.toLowerCase().replace(/3d/g, 'additive manufacturing').replace(/\bam\b/g, 'additive manufacturing').match(/[a-z0-9]+/g)?.filter(t => !stop.has(t) && t.length > 1) || []; }
 export function retrieve(question: string, sources: Source[], topic = 'All topics') { const q = tokens(question); const chunks = sources.filter(s => topic === 'All topics' || s.topic === topic).filter(s => s.id !== 'crossref-error').flatMap(s => { const words = s.text.split(/\s+/); const out: {

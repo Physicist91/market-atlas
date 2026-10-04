@@ -81,8 +81,17 @@ export default function Home() {
         setError('');
         try {
             const r = await fetch('/api/sources', { method });
+            if (!r.ok) {
+                let errorMsg = 'Collection failed';
+                try {
+                    const d = await r.json();
+                    if (d?.error) errorMsg = d.error;
+                } catch {
+                    errorMsg = `Server error (${r.status})`;
+                }
+                throw new Error(errorMsg);
+            }
             const d: any = await r.json();
-            if (!r.ok) throw new Error(d.error || 'Collection failed');
             setSources(d.sources);
             setCheckedAt(d.checkedAt);
         } catch (e) {
@@ -95,8 +104,12 @@ export default function Home() {
     useEffect(() => {
         void collect('GET');
         fetch('/api/status')
-            .then(r => r.json())
-            .then(d => setGeneration((d as { generation: string }).generation))
+            .then(r => r.ok ? r.json() : null)
+            .then(d => {
+                if (d && (d as { generation?: string }).generation) {
+                    setGeneration((d as { generation: string }).generation);
+                }
+            })
             .catch(() => {});
         const interval = setInterval(() => void collect('GET'), 900000);
         return () => clearInterval(interval);
@@ -118,8 +131,17 @@ export default function Home() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ question: q, topic: t })
             });
+            if (!r.ok) {
+                let errorMsg = 'Research request failed';
+                try {
+                    const d = await r.json();
+                    if (d?.error) errorMsg = d.error;
+                } catch {
+                    errorMsg = `Server error (${r.status})`;
+                }
+                throw new Error(errorMsg);
+            }
             const d: any = await r.json();
-            if (!r.ok) throw new Error(d.error || 'Research request failed');
             setAnswer(d);
             return d;
         } catch (e) {
@@ -543,7 +565,7 @@ export default function Home() {
                                     <dt>Retrieval</dt>
                                     <dd>220-word chunks with 50-word overlap, BM25 lexical ranking, topic filtering, top 6 passages. No embeddings or model training in this version.</dd>
                                     <dt>Generation</dt>
-                                    <dd>{generation === 'configured' ? 'OpenAI Responses API with evidence-only instructions and source-ID checks.' : 'Retrieval-only fallback active. Optional OpenAI Responses integration is implemented but unconfigured.'}</dd>
+                                    <dd>{generation === 'configured' ? 'Google Gemini API with evidence-only instructions and source-ID citation checks.' : 'Retrieval-only fallback active. Optional Gemini API integration is implemented but unconfigured.'}</dd>
                                     <dt>Freshness & storage</dt>
                                     <dd>Refresh on open, every 15 minutes while open, or manually. Worker memory cache is temporary. There is no background crawler or durable vector database.</dd>
                                     <dt>Limitations</dt>
