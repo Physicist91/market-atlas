@@ -11,6 +11,8 @@
   --color-border: var(--border);
   --color-input: var(--border);
   --color-ring: var(--primary);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--foreground);
   --color-sidebar-accent: var(--accent);
@@ -30,6 +32,8 @@
   --muted-foreground: #64718a;
   --accent: #eaf0ff;
   --border: #e4e8f0;
+  --popover: #ffffff;
+  --popover-foreground: #182239;
   --sidebar: #ffffff;
 }
 
@@ -926,16 +930,60 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 
 .topic-select {
   width: 180px !important;
-  background: #ffffff;
+  background: #ffffff !important;
+  border: 1px solid #d2dbe9 !important;
+  color: #182239 !important;
   height: 40px !important;
   font-size: 13px !important;
+  border-radius: 7px !important;
 }
 
 .model-select {
-  width: 270px !important;
-  background: #ffffff;
+  width: 280px !important;
+  background: #ffffff !important;
+  border: 1px solid #d2dbe9 !important;
+  color: #182239 !important;
   height: 40px !important;
   font-size: 13px !important;
+  border-radius: 7px !important;
+}
+
+/* Radix Select Dropdown Popups */
+[data-slot="select-content"] {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border: 1px solid #d2dbe9 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 12px 28px -4px rgba(24, 38, 70, 0.16), 0 6px 12px -2px rgba(24, 38, 70, 0.08) !important;
+  z-index: 9999 !important;
+  padding: 6px !important;
+}
+
+[data-slot="select-item"] {
+  background: transparent;
+  color: #1a2744 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  transition: background 0.12s ease, color 0.12s ease !important;
+}
+
+[data-slot="select-item"]:hover,
+[data-slot="select-item"][data-highlighted],
+[data-slot="select-item"]:focus {
+  background-color: #eef4ff !important;
+  background: #eef4ff !important;
+  color: #2c5ce8 !important;
+  outline: none !important;
+}
+
+[data-slot="select-item"][data-state="checked"] {
+  background-color: #eaf0ff !important;
+  background: #eaf0ff !important;
+  color: #2c5ce8 !important;
+  font-weight: 600 !important;
 }
 
 .suggestions {
