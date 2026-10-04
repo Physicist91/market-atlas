@@ -59,11 +59,11 @@ function download(name: string, data: string, type = 'text/markdown') {
 const AVAILABLE_MODELS = [
     { id: 'gemini-3.5-flash-lite', label: 'Google Gemini 3.5 Flash-Lite (Lowest Cost / Free Tier)' },
     { id: 'gemini-3.5-flash', label: 'Google Gemini 3.5 Flash (Standard)' },
-    { id: 'meta-llama/Llama-3.1-8B-Instruct', label: 'HF: Llama 3.1 8B Instruct (Fast)' },
-    { id: 'deepseek-ai/DeepSeek-R1', label: 'HF: DeepSeek R1 (Reasoning)' },
-    { id: 'meta-llama/Llama-3.3-70B-Instruct', label: 'HF: Llama 3.3 70B Instruct' },
-    { id: 'Qwen/Qwen3.5-9B', label: 'HF: Qwen 3.5 9B' },
-    { id: 'google/gemma-3-4b-it', label: 'HF: Gemma 3 4B Instruct' },
+    { id: 'meta-llama/Llama-3.3-70B-Instruct', label: 'HF: Llama 3.3 70B Instruct (Top Performance)' },
+    { id: 'meta-llama/Llama-3.1-8B-Instruct', label: 'HF: Llama 3.1 8B Instruct (Ultra Fast)' },
+    { id: 'Qwen/Qwen2.5-72B-Instruct', label: 'HF: Qwen 2.5 72B Instruct (High Quality)' },
+    { id: 'google/gemma-3-4b-it', label: 'HF: Gemma 3 4B Instruct (Lightweight)' },
+    { id: 'deepseek-ai/DeepSeek-R1', label: 'HF: DeepSeek R1 (Deep Reasoning)' },
     { id: 'gpt-4o-mini', label: 'OpenAI GPT-4o Mini' },
     { id: 'retrieval-only', label: 'Extractive Retrieval Only (No LLM)' },
 ] as const;
