@@ -1289,7 +1289,20 @@ dd {
 
 .evidence-list small {
   font-size: 12px;
-  color: #8b98ab;
+  color: #6d7d96;
+  display: block;
+  margin-top: 4px;
+  line-height: 1.5;
+}
+
+.evidence-list small b {
+  color: #2b3b55;
+  font-weight: 600;
+}
+
+.evidence-list small strong {
+  color: #1f3560;
+  font-weight: 600;
 }
 
 .code-block {

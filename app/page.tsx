@@ -395,7 +395,7 @@ export default function Home() {
                                                 onClick={() => download(
                                                     'atlas-research-brief.md',
                                                     '# ' + asked + '\n\n' + answer.answer + '\n\n## Sources\n' +
-                                                    answer.evidence.map(e => '[' + e.number + '] ' + e.title + ' — ' + e.url + '\nFetched: ' + (e.fetchedAt || 'Baseline; no live fetch')).join('\n\n') +
+                                                    answer.evidence.map(e => '[' + e.number + '] ' + e.title + ' — ' + e.url + '\nPublisher: ' + e.publisher + '\nPublication date: ' + (e.date || 'Not established') + '\nFetched: ' + (e.fetchedAt ? fmt(e.fetchedAt) + ' SGT' : 'Baseline; no live fetch')).join('\n\n') +
                                                     '\n\n## Retrieval trace\n' + JSON.stringify(answer.trace, null, 2)
                                                 )}
                                             >
@@ -432,7 +432,9 @@ export default function Home() {
                                                                     {e.title} <ExternalLink size={12}/>
                                                                 </a>
                                                                 <p>{e.excerpt}</p>
-                                                                <small>{e.publisher} · {e.status === 'live' ? 'Fetched ' + fmt(e.fetchedAt) + ' SGT' : 'Retained baseline / unavailable source'} · {e.method ? e.method.toUpperCase() : 'HYBRID'} score: {e.score}{e.bm25Score !== undefined && e.denseScore !== undefined ? ` (BM25: ${e.bm25Score}, Vector: ${e.denseScore})` : ''}</small>
+                                                                <small>
+                                                                    <b>{e.publisher}</b> · Published: <strong>{e.date || 'Not established'}</strong> · {e.status === 'live' ? 'Fetched ' + fmt(e.fetchedAt) + ' SGT' : 'Retained baseline / unavailable source'} · {e.method ? e.method.toUpperCase() : 'HYBRID'} score: {e.score}{e.bm25Score !== undefined && e.denseScore !== undefined ? ` (BM25: ${e.bm25Score}, Vector: ${e.denseScore})` : ''}
+                                                                </small>
                                                             </div>
                                                         </article>
                                                     ))}
