@@ -17,8 +17,8 @@ export const seed: Source[] = [
     { id: 'woh-market', title: 'Wohlers Report 2026: the public market baseline', publisher: 'Wohlers Associates', url: 'https://wohlersassociates.com/press-releases/new-wohlers-report-2026-values-additive-manufacturing-market-at-24-2b/', topic: 'Market economics', date: '2026-02-17', text: 'Global additive manufacturing revenue reached $24.2 billion in 2025, up 10.9%. Revenue shares: printing services 48%, systems and servicing 26%, materials 20%, software 6%. Services grew 15.5%; system sales grew 3.6%. Average company revenue growth: Asia-Pacific 19.8%, Americas 12.6%, EMEA 9.0%. These regional measures are company averages, not market shares. The public release describes an industry focused on utilization and production outcomes.', status: 'baseline', fetchedAt: null, kind: 'Market data' },
     { id: 'woh-method', title: 'From paintings to maps: live market intelligence', publisher: 'Wohlers Associates', url: 'https://wohlersassociates.com/opinion/from-paintings-to-maps-why-additive-manufacturing-needs-live-market-intelligence/', topic: 'Methodology', date: '2026-01-14', text: 'Wohlers argues that annual snapshots cannot capture changing AM competition. Low-cost printer farms blur desktop and industrial categories. Transparent source coverage and methods help users compare market estimates. Connecting technical intelligence with financial decisions reduces fragmented decision-making. A continuously updated landscape supports aligned strategy, investment, and execution.', status: 'baseline', fetchedAt: null, kind: 'Article' },
     { id: 'woh-insights', title: 'Wohlers reports and insights index', publisher: 'Wohlers Platform', url: 'https://platform.wohlersassociates.com/insights', topic: 'Market intelligence', date: null, text: 'The public index lists annual reports, quarterly updates, specialty reports, and articles. Topics include autonomous manufacturing, defense-policy signals, low-cost printers, and regional AM developments. Some material requires an account or purchase; this demo uses only the public index and does not access licensed report bodies.', status: 'baseline', fetchedAt: null, kind: 'Article' },
-    { id: '3dpi-insights', title: '3D Printing Industry: Market & Industry Insights', publisher: '3D Printing Industry', url: 'https://3dprintingindustry.com/industry-insights/', topic: 'Market intelligence', date: '2026-10-02', text: '3D Printing Industry tracks global additive manufacturing developments, market outlooks, software integration (AI, CAD/CAM), hardware landscape maps, supply chain trends, and industrial adoption across aerospace, medical, defense, and tooling sectors. Analysis covers manufacturing capacity, utilization rates, and emerging technologies.', status: 'baseline', fetchedAt: null, kind: 'Article' },
     { id: '3dpi-small-factories', title: 'America’s Small Factories are Still Waiting for Work', publisher: '3D Printing Industry', url: 'https://3dprintingindustry.com/news/americas-small-factories-are-still-waiting-for-work-255350/', topic: 'Manufacturing capacity', date: '2026-10-02', text: 'American manufacturers are accumulating orders while many smaller factories struggle to find enough work. In Xometry’s 2027 Manufacturing Outlook, 77% of manufacturers report larger production backlogs, yet capacity utilization remains uneven across small machine shops and specialized AM bureaus. Automation, software quoting, and AI integration are key differentiators for contract manufacturers.', status: 'baseline', fetchedAt: null, kind: 'Article' },
+    { id: '3dpi-6k-addman', title: '6K Additive to Supply and Buy Back Nickel 718 Powder for ADDMAN in $10.8M Deal', publisher: '3D Printing Industry', url: 'https://3dprintingindustry.com/news/6k-additive-to-supply-and-buy-back-nickel-718-powder-for-addman-in-us10-8m-deal-255336/', topic: 'Materials', date: '2026-10-02', text: '6K Additive signed a multi-year $10.8M circular supply deal with ADDMAN Group to supply sustainable Nickel 718 metal powders produced via UniMelt microwave plasma technology and buy back used powder and build scrap for re-processing into prime powder.', status: 'baseline', fetchedAt: null, kind: 'Article' },
     { id: 'nist-qualification', title: 'Qualification of AM materials, processes, and parts', publisher: 'NIST', url: 'https://www.nist.gov/programs-projects/qualification-additive-manufacturing-materials-processes-and-parts', topic: 'Qualification', date: null, text: 'NIST develops measurement methods, reference data, and protocols that support faster additive manufacturing qualification. Its role is research and measurement science; regulatory bodies establish actual qualification requirements. Technical validation and test methods are important adoption considerations.', status: 'baseline', fetchedAt: null, kind: 'Research' },
     { id: 'nist-materials', title: 'Materials science for additive manufacturing', publisher: 'NIST', url: 'https://www.nist.gov/additive-manufacturing/our-team/material-measurement-laboratory', topic: 'Materials', date: null, text: 'NIST materials research develops standards and reference materials to support AM adoption. Its work addresses qualification, certification, and measurement science. AM Bench provides benchmark challenges for the research community.', status: 'baseline', fetchedAt: null, kind: 'Research' },
     { id: 'nist-am', title: 'Additive manufacturing research at NIST', publisher: 'NIST', url: 'https://www.nist.gov/additive-manufacturing', topic: 'Advanced manufacturing', date: null, text: 'NIST additive manufacturing research focuses on measurement science, manufacturing processes, and standards. Its research projects and publications provide technical evidence for assessing manufacturing adoption.', status: 'baseline', fetchedAt: null, kind: 'Research' }
@@ -158,23 +158,44 @@ export async function refresh() {
             results.push(...batch);
         }
 
-        // --- Ingest live market insights from 3D Printing Industry ---
+        // --- Ingest latest live daily news and market insights from 3D Printing Industry ---
         try {
-            const feedUrl = 'https://3dprintingindustry.com/industry-insights/feed/';
-            if (await permitted(feedUrl)) {
+            const feedUrls = [
+                'https://3dprintingindustry.com/feed/',
+                'https://3dprintingindustry.com/industry-insights/feed/'
+            ];
+            for (const feedUrl of feedUrls) {
+                if (!await permitted(feedUrl)) continue;
                 const xml = await boundedFetch(feedUrl);
                 const itemMatches = xml.match(/<item>([\s\S]*?)<\/item>/g) || [];
-                for (const item of itemMatches.slice(0, 5)) {
-                    const title = (item.match(/<title>([\s\S]*?)<\/title>/i)?.[1] || '').replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1').trim();
+                for (const item of itemMatches) {
+                    if (results.filter(s => s.publisher === '3D Printing Industry').length >= 8) break;
+                    const title = (item.match(/<title>([\s\S]*?)<\/title>/i)?.[1] || '').replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1').replace(/&#8217;/g, "'").replace(/&#8211;/g, "–").replace(/&#8220;|&#8221;/g, '"').trim();
                     const link = (item.match(/<link>([\s\S]*?)<\/link>/i)?.[1] || '').trim().replace(/\?utm_source=.*$/, '');
                     const pubDate = (item.match(/<pubDate>([\s\S]*?)<\/pubDate>/i)?.[1] || '').trim();
-                    const desc = (item.match(/<description>([\s\S]*?)<\/description>/i)?.[1] || '').replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1').replace(/<[^>]+>/g, '').trim();
+                    const desc = (item.match(/<description>([\s\S]*?)<\/description>/i)?.[1] || '').replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1').replace(/<[^>]+>/g, '').replace(/&#8217;/g, "'").replace(/&#8211;/g, "–").replace(/&#8220;|&#8221;/g, '"').trim();
+                    
                     if (!title || !link || results.some(s => s.url === link)) continue;
                     if (hasExcludedAttribution(title + ' ' + desc)) continue;
+
+                    // Freshness filter: ensure the news is recent (from 2025/2026)
+                    const parsedTime = pubDate ? Date.parse(pubDate) : 0;
+                    if (parsedTime && parsedTime < Date.parse('2025-01-01T00:00:00Z')) {
+                        continue; // Skip outdated historical articles
+                    }
 
                     const dateStr = pubDate ? new Date(pubDate).toISOString().slice(0, 10) : null;
                     const slug = link.split('/').filter(Boolean).pop()?.slice(0, 40) || Math.random().toString(36).slice(2, 8);
                     const id = '3dpi-' + slug;
+
+                    // Topic classification
+                    let topic = 'Market intelligence';
+                    const lowerContent = (title + ' ' + desc).toLowerCase();
+                    if (/material|metal|powder|resin|ceramic|polymer/i.test(lowerContent)) topic = 'Materials';
+                    else if (/aerospace|space|orbit|aircraft|rocket/i.test(lowerContent)) topic = 'Aerospace';
+                    else if (/certif|qualif|standard|dnv/i.test(lowerContent)) topic = 'Qualification';
+                    else if (/medical|health|dental|bolus|prosthetic/i.test(lowerContent)) topic = 'Medical & Healthcare';
+                    else if (/waam|laser|pbf|printer|scanner|hardware/i.test(lowerContent)) topic = 'Advanced manufacturing';
 
                     let articleText = desc || title;
                     try {
@@ -194,7 +215,7 @@ export async function refresh() {
                         title,
                         publisher: '3D Printing Industry',
                         url: link,
-                        topic: 'Market intelligence',
+                        topic,
                         date: dateStr,
                         fetchedAt: new Date().toISOString(),
                         text: omitExcludedAttribution(articleText),
