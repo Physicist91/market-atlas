@@ -56,13 +56,14 @@ function download(name: string, data: string, type = 'text/markdown') {
 }
 
 const AVAILABLE_MODELS = [
-    { id: 'gemini-3.8-flash', label: 'Google Gemini 3.8 Flash (Default)' },
+    { id: 'gemini-2.5-flash-lite', label: 'Google Gemini 2.5 Flash-Lite (Lowest Cost / Free Tier)' },
+    { id: 'gemini-2.5-flash', label: 'Google Gemini 2.5 Flash (Standard)' },
     { id: 'Qwen/Qwen2.5-72B-Instruct', label: 'HF: Qwen 2.5 72B Instruct' },
     { id: 'meta-llama/Llama-3.3-70B-Instruct', label: 'HF: Llama 3.3 70B Instruct' },
     { id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-32B', label: 'HF: DeepSeek R1 Distill 32B' },
     { id: 'mistralai/Mistral-7B-Instruct-v0.3', label: 'HF: Mistral 7B Instruct v0.3' },
     { id: 'gpt-4o-mini', label: 'OpenAI GPT-4o Mini' },
-    { id: 'retrieval-only', label: 'Extractive Retrieval Only' },
+    { id: 'retrieval-only', label: 'Extractive Retrieval Only (No LLM)' },
 ] as const;
 
 export default function Home() {
@@ -74,7 +75,7 @@ export default function Home() {
     const [error, setError] = useState('');
     const [generation, setGeneration] = useState('retrieval-only');
     const [providers, setProviders] = useState<{ gemini?: boolean; huggingface?: boolean; openai?: boolean }>({});
-    const [selectedModel, setSelectedModel] = useState<string>('gemini-3.8-flash');
+    const [selectedModel, setSelectedModel] = useState<string>('gemini-2.5-flash-lite');
     const [query, setQuery] = useState('');
     const [topic, setTopic] = useState('All topics');
     const [question, setQuestion] = useState('');
