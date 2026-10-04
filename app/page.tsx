@@ -55,6 +55,16 @@ function download(name: string, data: string, type = 'text/markdown') {
     URL.revokeObjectURL(url);
 }
 
+const AVAILABLE_MODELS = [
+    { id: 'gemini-3.8-flash', label: 'Google Gemini 3.8 Flash (Default)' },
+    { id: 'Qwen/Qwen2.5-72B-Instruct', label: 'HF: Qwen 2.5 72B Instruct' },
+    { id: 'meta-llama/Llama-3.3-70B-Instruct', label: 'HF: Llama 3.3 70B Instruct' },
+    { id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-32B', label: 'HF: DeepSeek R1 Distill 32B' },
+    { id: 'mistralai/Mistral-7B-Instruct-v0.3', label: 'HF: Mistral 7B Instruct v0.3' },
+    { id: 'gpt-4o-mini', label: 'OpenAI GPT-4o Mini' },
+    { id: 'retrieval-only', label: 'Extractive Retrieval Only' },
+] as const;
+
 export default function Home() {
     const [view, setView] = useState<'overview' | 'assistant' | 'sources' | 'pipeline'>('overview');
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -63,6 +73,8 @@ export default function Home() {
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState('');
     const [generation, setGeneration] = useState('retrieval-only');
+    const [providers, setProviders] = useState<{ gemini?: boolean; huggingface?: boolean; openai?: boolean }>({});
+    const [selectedModel, setSelectedModel] = useState<string>('gemini-3.8-flash');
     const [query, setQuery] = useState('');
     const [topic, setTopic] = useState('All topics');
     const [question, setQuestion] = useState('');
@@ -109,13 +121,16 @@ export default function Home() {
                 if (d && (d as { generation?: string }).generation) {
                     setGeneration((d as { generation: string }).generation);
                 }
+                if (d && (d as { providers?: any }).providers) {
+                    setProviders((d as { providers: any }).providers);
+                }
             })
             .catch(() => {});
         const interval = setInterval(() => void collect('GET'), 900000);
         return () => clearInterval(interval);
     }, [collect]);
 
-    const ask = useCallback(async (q: string, t = 'All topics') => {
+    const ask = useCallback(async (q: string, t = 'All topics', m = selectedModel) => {
         if (q.trim().length < 3 || q.length > 1500) {
             throw new Error('Ask a question between 3 and 1,500 characters.');
         }
@@ -129,7 +144,7 @@ export default function Home() {
             const r = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ question: q, topic: t })
+                body: JSON.stringify({ question: q, topic: t, model: m })
             });
             if (!r.ok) {
                 let errorMsg = 'Research request failed';
@@ -150,7 +165,7 @@ export default function Home() {
         } finally {
             setAsking(false);
         }
-    }, []);
+    }, [selectedModel]);
 
     const topics = ['All topics', ...Array.from(new Set(sources.map(s => s.topic).filter(Boolean)))];
     const live = sources.filter(s => s.status === 'live').length;
@@ -174,6 +189,21 @@ export default function Home() {
             </SelectTrigger>
             <SelectContent>
                 {topics.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+            </SelectContent>
+        </Select>
+    );
+
+    const renderModelSelector = () => (
+        <Select value={selectedModel} onValueChange={setSelectedModel}>
+            <SelectTrigger className="model-select">
+                <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+                {AVAILABLE_MODELS.map(m => (
+                    <SelectItem key={m.id} value={m.id}>
+                        {m.label}
+                    </SelectItem>
+                ))}
             </SelectContent>
         </Select>
     );
@@ -321,7 +351,10 @@ export default function Home() {
                                             minLength={3}
                                         />
                                         <div className="question-controls">
-                                            {renderTopicSelector()}
+                                            <div className="selector-group">
+                                                {renderTopicSelector()}
+                                                {renderModelSelector()}
+                                            </div>
                                             <button className="button" disabled={asking || question.trim().length < 3} type="submit">
                                                 {asking ? <RefreshCw className="spin" size={16}/> : <Send size={16}/>}
                                                 <span>{asking ? 'Researching…' : 'Research'}</span>
@@ -348,7 +381,11 @@ export default function Home() {
                                 {answer && (
                                     <section className="panel answer-panel" aria-live="polite">
                                         <div className="panel-header">
-                                            <span className="tag">{answer.mode === 'rag' ? 'GROUNDED ANALYSIS' : 'RETRIEVED EVIDENCE'}</span>
+                                            <span className="tag">
+                                                {answer.mode === 'rag'
+                                                    ? `GROUNDED ANALYSIS · ${AVAILABLE_MODELS.find(m => m.id === ((answer.trace as any)?.selectedModel || selectedModel))?.label.split(' (')[0] || 'LLM'}`
+                                                    : 'RETRIEVED EVIDENCE'}
+                                            </span>
                                             <button
                                                 type="button"
                                                 className="text-button"
@@ -408,7 +445,15 @@ export default function Home() {
                                         <dt>Current live records</dt><dd>{live}</dd>
                                         <dt>Last collection check</dt><dd>{fmt(checkedAt)} {checkedAt ? 'SGT' : ''}</dd>
                                         <dt>Retrieval</dt><dd>Hybrid (BM25 + Semantic Vectors · RRF)</dd>
-                                        <dt>Generation</dt><dd>{generation === 'configured' ? 'Server-side LLM configured' : 'No API key connected'}</dd>
+                                        <dt>Active Model</dt><dd>{AVAILABLE_MODELS.find(m => m.id === selectedModel)?.label.split(' (')[0]}</dd>
+                                        <dt>Configured Providers</dt>
+                                        <dd>
+                                            {[
+                                                providers.gemini ? 'Gemini' : null,
+                                                providers.huggingface ? 'Hugging Face' : null,
+                                                providers.openai ? 'OpenAI' : null
+                                            ].filter(Boolean).join(', ') || 'None (Extractive fallback)'}
+                                        </dd>
                                     </dl>
                                     <div className="notice">
                                         {generation === 'configured' ? 'Review citations and distinguish facts from interpretation.' : 'This mode returns evidence excerpts. LLM synthesis is available after a server-side API key is configured.'}

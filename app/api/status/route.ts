@@ -1,19 +1,28 @@
 import { snapshot } from '@/lib/corpus';
 
 export async function GET() {
-  const isConfigured = Boolean(
+  const hasGemini = Boolean(
     process.env.GEMINI_API_KEY ||
     process.env.GOOGLE_API_KEY ||
-    process.env.GOOGLE_GENAI_API_KEY ||
-    process.env.OPENAI_API_KEY
+    process.env.GOOGLE_GENAI_API_KEY
   );
+  const hasHuggingFace = Boolean(
+    process.env.HF_TOKEN ||
+    process.env.HUGGINGFACE_API_KEY ||
+    process.env.HUGGING_FACE_HUB_TOKEN
+  );
+  const hasOpenAI = Boolean(process.env.OPENAI_API_KEY);
+
+  const isConfigured = hasGemini || hasHuggingFace || hasOpenAI;
 
   return Response.json({
     generation: isConfigured ? 'configured' : 'retrieval-only',
-    provider: (process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || process.env.GOOGLE_GENAI_API_KEY)
-      ? 'gemini'
-      : (process.env.OPENAI_API_KEY ? 'openai' : null),
-    model: process.env.GEMINI_MODEL || (process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY ? 'gemini-3.8-flash' : (process.env.OPENAI_MODEL || null)),
+    providers: {
+      gemini: hasGemini,
+      huggingface: hasHuggingFace,
+      openai: hasOpenAI
+    },
+    defaultModel: process.env.GEMINI_MODEL || 'gemini-3.8-flash',
     ...snapshot()
   });
 }
