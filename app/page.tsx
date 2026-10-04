@@ -5,6 +5,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/select';
 import { Table, TableHeader, TableHead, TableRow, TableCell, TableBody } from '@/components/ui/table';
 import Overview from '@/components/overview';
+import { MarkdownRenderer } from '@/components/markdown-renderer';
 import { seed, type Source } from '@/lib/corpus';
 
 const nav = [
@@ -403,7 +404,19 @@ export default function Home() {
                                         </div>
                                         <h2>{asked}</h2>
                                         {answer.warning && <p className="notice">{answer.warning}</p>}
-                                        <div className="answer-text">{answer.answer}</div>
+                                        <div className="answer-text">
+                                            <MarkdownRenderer
+                                                content={answer.answer}
+                                                onCitationClick={(num) => {
+                                                    const el = document.getElementById(`evidence-cite-${num}`);
+                                                    if (el) {
+                                                        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                                                        el.classList.add('highlight-flash');
+                                                        setTimeout(() => el.classList.remove('highlight-flash'), 2500);
+                                                    }
+                                                }}
+                                            />
+                                        </div>
                                         <Tabs defaultValue="evidence">
                                             <TabsList variant="line">
                                                 <TabsTrigger value="evidence">Evidence ({answer.evidence.length})</TabsTrigger>
@@ -412,7 +425,7 @@ export default function Home() {
                                             <TabsContent value="evidence">
                                                 <div className="evidence-list">
                                                     {answer.evidence.map(e => (
-                                                        <article key={e.number}>
+                                                        <article key={e.number} id={`evidence-cite-${e.number}`}>
                                                             <div className="citation-number">{e.number}</div>
                                                             <div>
                                                                 <a href={e.url} target="_blank" rel="noreferrer">
