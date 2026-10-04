@@ -1,0 +1,164 @@
+{
+  "metrics": {
+    "year": 2025,
+    "revenue": 24.2,
+    "growth": 10.9,
+    "segments": [
+      {
+        "name": "Printing services",
+        "share": 48.0
+      },
+      {
+        "name": "Systems & servicing",
+        "share": 26.0
+      },
+      {
+        "name": "Materials",
+        "share": 20.0
+      },
+      {
+        "name": "Software",
+        "share": 6.0
+      }
+    ],
+    "regions": [
+      {
+        "name": "Asia-Pacific",
+        "growth": 19.8
+      },
+      {
+        "name": "Americas",
+        "growth": 12.6
+      },
+      {
+        "name": "EMEA",
+        "growth": 9.0
+      }
+    ],
+    "sourceId": "woh-market",
+    "period": "2025",
+    "scope": "Global additive manufacturing",
+    "units": "USD billions; percent",
+    "method": "Public report-release figures; regional growth is average company revenue growth."
+  },
+  "sources_count": 9,
+  "sources": [
+    {
+      "id": "woh-market",
+      "title": "Wohlers Report 2026: the public market baseline",
+      "publisher": "Wohlers Associates",
+      "url": "https://wohlersassociates.com/press-releases/new-wohlers-report-2026-values-additive-manufacturing-market-at-24-2b/",
+      "topic": "Market economics",
+      "date": "2026-02-17",
+      "text": "Global additive manufacturing revenue reached $24.2 billion in 2025, up 10.9%. Revenue shares: printing services 48%, systems and servicing 26%, materials 20%, software 6%. Services grew 15.5%; system sales grew 3.6%. Average company revenue growth: Asia-Pacific 19.8%, Americas 12.6%, EMEA 9.0%. These regional measures are company averages, not market shares. The public release describes an industry focused on utilization and production outcomes.",
+      "status": "baseline",
+      "fetchedAt": "2026-10-04T05:28:12.901188+00:00",
+      "kind": "Market data",
+      "hash": "c853a9f78e566416488526ad672c6b9bda003ed129972434a5d5eec19d4fdf26"
+    },
+    {
+      "id": "woh-method",
+      "title": "From paintings to maps: live market intelligence",
+      "publisher": "Wohlers Associates",
+      "url": "https://wohlersassociates.com/opinion/from-paintings-to-maps-why-additive-manufacturing-needs-live-market-intelligence/",
+      "topic": "Methodology",
+      "date": "2026-01-14",
+      "text": "Wohlers argues that annual snapshots cannot capture changing AM competition. Low-cost printer farms blur desktop and industrial categories. Transparent source coverage and methods help users compare market estimates. Connecting technical intelligence with financial decisions reduces fragmented decision-making.",
+      "status": "baseline",
+      "fetchedAt": "2026-10-04T05:28:12.901218+00:00",
+      "kind": "Article",
+      "hash": "540994ec31f6cfa9f238c8de873fb033eaf36662f97e41b1317e22f3cd5d1c7e"
+    },
+    {
+      "id": "woh-insights",
+      "title": "Wohlers reports and insights index",
+      "publisher": "Wohlers Platform",
+      "url": "https://platform.wohlersassociates.com/insights",
+      "topic": "Market intelligence",
+      "date": null,
+      "text": "The public index lists annual reports, quarterly updates, specialty reports, and articles. Topics include autonomous manufacturing, defense-policy signals, low-cost printers, and regional AM developments. Some material requires an account or purchase; this demo uses only the public index.",
+      "status": "baseline",
+      "fetchedAt": null,
+      "kind": "Article"
+    },
+    {
+      "id": "nist-qualification",
+      "title": "Qualification of AM materials, processes, and parts",
+      "publisher": "NIST",
+      "url": "https://www.nist.gov/programs-projects/qualification-additive-manufacturing-materials-processes-and-parts",
+      "topic": "Qualification",
+      "date": null,
+      "fetchedAt": "2026-10-04T05:27:53.721520+00:00",
+      "text": "Qualification for Additive Manufacturing Materials, Processes, and Parts | NIST Skip to main content Official websites use .gov A .gov website belongs to an official government organization in the United States. Secure .gov websites use HTTPS A lock ( Lock A locked padlock ) or https:// means you\u2019ve safely connected to the .gov website. Share sensitive information only on official, secure websites...",
+      "status": "live",
+      "kind": "Research",
+      "hash": "b71827383ff69a73fe80d8c91101835a5b159ce9957d3f831dc70a5fc6aa92f2"
+    },
+    {
+      "id": "nist-materials",
+      "title": "Materials science for additive manufacturing",
+      "publisher": "NIST",
+      "url": "https://www.nist.gov/additive-manufacturing/our-team/material-measurement-laboratory",
+      "topic": "Materials",
+      "date": null,
+      "fetchedAt": "2026-10-04T05:27:54.973903+00:00",
+      "text": "Materials Science for Additive Manufacturing | NIST Skip to main content Official websites use .gov A .gov website belongs to an official government organization in the United States. Secure .gov websites use HTTPS A lock ( Lock A locked padlock ) or https:// means you\u2019ve safely connected to the .gov website. Share sensitive information only on official, secure websites. https://www.nist.gov/addit...",
+      "status": "live",
+      "kind": "Research",
+      "hash": "43ca2e90302649a1d37358618dd9495bd66aaebb3cfa9342296f4915bfa76f93"
+    },
+    {
+      "id": "nist-am",
+      "title": "Additive manufacturing research at NIST",
+      "publisher": "NIST",
+      "url": "https://www.nist.gov/additive-manufacturing",
+      "topic": "Advanced manufacturing",
+      "date": null,
+      "fetchedAt": "2026-10-04T05:27:56.153069+00:00",
+      "text": "Additive manufacturing | NIST Skip to main content Official websites use .gov A .gov website belongs to an official government organization in the United States. Secure .gov websites use HTTPS A lock ( Lock A locked padlock ) or https:// means you\u2019ve safely connected to the .gov website. Share sensitive information only on official, secure websites. https://www.nist.gov/additive-manufacturing Manu...",
+      "status": "live",
+      "kind": "Research",
+      "hash": "c3668a0d439294cebf90e0d425dffd3e31be0d10f43117507f5372eb9d3e5126"
+    },
+    {
+      "id": "crossref-10.1007/s43621-026-04755-9",
+      "title": "Environmental strategy and digital transformation: pathways to green innovation and sustainable performance in Vietnamese manufacturing firms",
+      "publisher": "Springer Science and Business Media LLC",
+      "url": "https://doi.org/10.1007/s43621-026-04755-9",
+      "topic": "Research literature",
+      "date": "2026-10-04",
+      "fetchedAt": "2026-10-04T05:28:04.353890+00:00",
+      "text": "Environmental strategy and digital transformation: pathways to green innovation and sustainable performance in Vietnamese manufacturing firms. Abstract Manufacturing firms in emerging economies face dual pressures to improve both environmental performance and digital technology adoption. Both themes have attracted extensive research attention on their own, yet few studies ask whether\u2014and through what mechanisms\u2014a proactive environmental strategy is associated with a stronger orientation toward b",
+      "status": "live",
+      "kind": "API",
+      "hash": "8d3b00e77e2b5b1cfb5c95290df262f59eec33632e21011ee6dfbf0e52b605e4"
+    },
+    {
+      "id": "crossref-10.1007/s00170-026-19206-y",
+      "title": "Design framework and manufacturing of an active magnetic bearing spindle for micro-milling applications",
+      "publisher": "Springer Science and Business Media LLC",
+      "url": "https://doi.org/10.1007/s00170-026-19206-y",
+      "topic": "Research literature",
+      "date": "2026-10-03",
+      "fetchedAt": "2026-10-04T05:28:04.353943+00:00",
+      "text": "Design framework and manufacturing of an active magnetic bearing spindle for micro-milling applications. Bibliographic metadata; abstract omitted.",
+      "status": "live",
+      "kind": "API",
+      "hash": "651946e229d942aa34a73cdc47a9bc77fd25cb33b2ce56ada5f952350f77c1c3"
+    },
+    {
+      "id": "crossref-10.1007/s11661-026-08378-7",
+      "title": "Wire Arc Additive Manufacturing of 316L Stainless Steel: Process Parameters, Unique Microstructure, and Its Influence on Tensile and Corrosion Behavior",
+      "publisher": "Springer Science and Business Media LLC",
+      "url": "https://doi.org/10.1007/s11661-026-08378-7",
+      "topic": "Research literature",
+      "date": "2026-10-03",
+      "fetchedAt": "2026-10-04T05:28:04.353958+00:00",
+      "text": "Wire Arc Additive Manufacturing of 316L Stainless Steel: Process Parameters, Unique Microstructure, and Its Influence on Tensile and Corrosion Behavior. Bibliographic metadata; abstract omitted.",
+      "status": "live",
+      "kind": "API",
+      "hash": "06698e0a2b9adaed6f55b2c7811c14984706e6c9f8eb28b69e773cec3606d37a"
+    }
+  ],
+  "generated_at": "2026-10-04T05:28:12.901300+00:00"
+}
