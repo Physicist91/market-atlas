@@ -486,10 +486,21 @@ export default function Home() {
                             <section className="panel">
                                 <div className="panel-header">
                                     <h2>Collection health</h2>
-                                    <button type="button" className="text-button" disabled={busy} onClick={() => void collect()}>
-                                        <RefreshCw size={15} className={busy ? 'spin' : ''}/>
-                                        <span>{busy ? 'Collecting…' : 'Run collection'}</span>
-                                    </button>
+                                    <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                                        <a
+                                            href="/notebook/manufacturing_atlas_scraping_pipeline.ipynb"
+                                            download="manufacturing_atlas_scraping_pipeline.ipynb"
+                                            className="text-button"
+                                            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                                            title="Download Python Jupyter notebook"
+                                        >
+                                            <Download size={14}/> Scraping Notebook (.ipynb)
+                                        </a>
+                                        <button type="button" className="text-button" disabled={busy} onClick={() => void collect()}>
+                                            <RefreshCw size={14} className={busy ? 'spin' : ''}/>
+                                            <span>{busy ? 'Collecting…' : 'Run collection'}</span>
+                                        </button>
+                                    </div>
                                 </div>
                                 <div className="health-stats">
                                     <div><b>{live}</b><span>Live records</span></div>
@@ -539,6 +550,20 @@ export default function Home() {
                                     <dd>Small public corpus, HTML parsing heuristics, no exhaustive market coverage, no independent survey dataset. Bibliographic metadata alone cannot establish research findings.</dd>
                                 </dl>
                             </section>
+                        </div>
+                        <div className="panel" style={{ marginTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', background: '#f8faff', border: '1px solid #dbe5f7' }}>
+                            <div>
+                                <h3 style={{ margin: '0 0 4px', fontSize: '15px', fontWeight: 600, color: '#162744' }}>Python Web Scraping & Data Extraction Pipeline</h3>
+                                <p style={{ margin: 0, fontSize: '13px', color: '#60728f' }}>Demo notebook illustrating how Wohlers market release metrics ($24.2B, segments, regional growth), NIST research, and Crossref articles are collected.</p>
+                            </div>
+                            <a
+                                href="/notebook/manufacturing_atlas_scraping_pipeline.ipynb"
+                                download="manufacturing_atlas_scraping_pipeline.ipynb"
+                                className="button"
+                                style={{ textDecoration: 'none' }}
+                            >
+                                <Download size={15}/> Download Scraping Notebook (.ipynb)
+                            </a>
                         </div>
                         <section className="panel quality-panel">
                             <h2>Quality gates for a production pipeline</h2>
