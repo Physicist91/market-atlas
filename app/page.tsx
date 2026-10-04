@@ -380,7 +380,7 @@ export default function Home() {
                                                                     {e.title} <ExternalLink size={12}/>
                                                                 </a>
                                                                 <p>{e.excerpt}</p>
-                                                                <small>{e.publisher} · {e.status === 'live' ? 'Fetched ' + fmt(e.fetchedAt) + ' SGT' : 'Retained baseline / unavailable source'} · BM25 {e.score}</small>
+                                                                <small>{e.publisher} · {e.status === 'live' ? 'Fetched ' + fmt(e.fetchedAt) + ' SGT' : 'Retained baseline / unavailable source'} · {e.method ? e.method.toUpperCase() : 'HYBRID'} score: {e.score}{e.bm25Score !== undefined && e.denseScore !== undefined ? ` (BM25: ${e.bm25Score}, Vector: ${e.denseScore})` : ''}</small>
                                                             </div>
                                                         </article>
                                                     ))}
@@ -407,7 +407,7 @@ export default function Home() {
                                         <dt>Corpus</dt><dd>{sources.length} source records</dd>
                                         <dt>Current live records</dt><dd>{live}</dd>
                                         <dt>Last collection check</dt><dd>{fmt(checkedAt)} {checkedAt ? 'SGT' : ''}</dd>
-                                        <dt>Retrieval</dt><dd>BM25 · 220-word chunks</dd>
+                                        <dt>Retrieval</dt><dd>Hybrid (BM25 + Semantic Vectors · RRF)</dd>
                                         <dt>Generation</dt><dd>{generation === 'configured' ? 'Server-side LLM configured' : 'No API key connected'}</dd>
                                     </dl>
                                     <div className="notice">
@@ -563,7 +563,7 @@ export default function Home() {
                                     <dt>Structured collection</dt>
                                     <dd>Crossref REST API: titles, publishers, dates, DOI, and abstracts where supplied. Annual market metrics are separately curated.</dd>
                                     <dt>Retrieval</dt>
-                                    <dd>220-word chunks with 50-word overlap, BM25 lexical ranking, topic filtering, top 6 passages. No embeddings or model training in this version.</dd>
+                                    <dd>Hybrid Sparse (BM25) & Dense Semantic Embeddings combined with Reciprocal Rank Fusion (RRF, k=60), topic filtering, top 6 passages.</dd>
                                     <dt>Generation</dt>
                                     <dd>{generation === 'configured' ? 'Google Gemini API with evidence-only instructions and source-ID citation checks.' : 'Retrieval-only fallback active. Optional Gemini API integration is implemented but unconfigured.'}</dd>
                                     <dt>Freshness & storage</dt>
