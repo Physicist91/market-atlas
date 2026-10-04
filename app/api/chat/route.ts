@@ -83,7 +83,7 @@ export async function POST(request: Request) {
                 };
 
                 // Call HuggingFace Serverless Inference Router (OpenAI Compatible)
-                const r = await fetch('https://router.huggingface.co/hf-inference/v1/chat/completions', {
+                const r = await fetch('https://router.huggingface.co/v1/chat/completions', {
                     method: 'POST',
                     headers: hfHeaders,
                     body: JSON.stringify({
@@ -95,7 +95,7 @@ export async function POST(request: Request) {
                         max_tokens: 1300,
                         temperature: 0.2
                     }),
-                    signal: AbortSignal.timeout(15000)
+                    signal: AbortSignal.timeout(20000)
                 });
 
                 if (!r.ok) {
@@ -108,7 +108,11 @@ export async function POST(request: Request) {
                 }
 
                 const data: any = await r.json();
-                const generated = data.choices?.[0]?.message?.content?.trim();
+                let generated = data.choices?.[0]?.message?.content?.trim() || '';
+                // Strip <think>...</think> reasoning blocks if present
+                if (generated.includes('</think>')) {
+                    generated = generated.split('</think>').pop()?.trim() || generated;
+                }
                 if (generated && hasExcludedAttribution(generated))
                     throw new Error('Answer contains excluded attribution');
                 if (!generated)
