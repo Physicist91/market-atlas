@@ -2,6 +2,25 @@
 
 An independent advanced manufacturing research application inspired by Wohlers' public market intelligence approach. Not affiliated with Wohlers Associates.
 
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                        Manufacturing Atlas: RAG Pipeline Flow                          │
+└────────────────────────────────────────────────────────────────────────────────────────┘
+ [1. Ingestion & Sanitization] ──> [2. Sliding-Window Chunking] ──> [3. Dense Embeddings]
+                │                                                          │
+                ▼                                                          ▼
+ [7. SHA-256 Lineage Fingerprint]                                  [In-Memory Vector Store]
+                                                                           │
+ [4. Hybrid Retrieval & RRF Ranking] <─────────────────────────────────────┘
+        ├── Sparse Okapi BM25 (k1=2.2, b=0.75)
+        ├── Dense Cosine Similarity (Gemini 768-d / Subword 256-d)
+        └── Reciprocal Rank Fusion (k=60) + Diversity Deduplication
+                │
+                ▼
+ [5. Grounded Prompt Synthesis] ──> [Analyst Constraints & [n] Citation Badges]
+                │
+                ├── [6. Evaluation Suite]: Coverage, Precision, Latency, Access Control
+                └── [8. Production Telemetry]: Centroid Drift, Freshness Decay, Monitoring
+
 ## Included
 
 - Dated 2025 market dashboard with primary-source attribution, revenue share chart, and regional company-growth comparisons.
