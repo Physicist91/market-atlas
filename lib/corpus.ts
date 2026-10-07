@@ -370,14 +370,14 @@ function localEmbedding(text: string, dims = 256): number[] {
 
 async function fetchGeminiEmbedding(text: string, apiKey: string): Promise<number[] | null> {
     try {
-        const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key=${apiKey}`, {
+        const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key=${apiKey}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                model: 'models/text-embedding-004',
-                content: { parts: [{ text: text.slice(0, 2000) }] }
+                content: { parts: [{ text: text.slice(0, 2000) }] },
+                outputDimensionality: 768
             }),
-            signal: AbortSignal.timeout(3500)
+            signal: AbortSignal.timeout(5000)
         });
         if (!r.ok) return null;
         const d: any = await r.json();
