@@ -34,6 +34,9 @@ type Evidence = {
     excerpt: string;
     score: number;
     chunk: number;
+    method?: string;
+    bm25Score?: number;
+    denseScore?: number;
 };
 
 type Answer = {
