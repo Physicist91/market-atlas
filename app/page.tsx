@@ -635,19 +635,35 @@ export default function Home() {
                                 </dl>
                             </section>
                         </div>
-                        <div className="panel" style={{ marginTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', background: '#f8faff', border: '1px solid #dbe5f7' }}>
-                            <div>
-                                <h3 style={{ margin: '0 0 4px', fontSize: '15px', fontWeight: 600, color: '#162744' }}>Python Web Scraping & Data Extraction Pipeline</h3>
-                                <p style={{ margin: 0, fontSize: '13px', color: '#60728f' }}>Demo notebook illustrating how Wohlers market release metrics ($24.2B, segments, regional growth), NIST research, and Crossref articles are collected.</p>
+                        <div style={{ marginTop: '20px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: '16px' }}>
+                            <div className="panel" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '14px', background: '#f8faff', border: '1px solid #dbe5f7' }}>
+                                <div>
+                                    <h3 style={{ margin: '0 0 4px', fontSize: '15px', fontWeight: 600, color: '#162744' }}>Python Web Scraping & Ingestion Pipeline</h3>
+                                    <p style={{ margin: 0, fontSize: '13px', color: '#60728f' }}>Demo notebook illustrating how Wohlers market release metrics ($24.2B, segments, regional growth), NIST research, and Crossref articles are collected.</p>
+                                </div>
+                                <a
+                                    href="/notebook/manufacturing_atlas_scraping_pipeline.ipynb"
+                                    download="manufacturing_atlas_scraping_pipeline.ipynb"
+                                    className="button outline"
+                                    style={{ textDecoration: 'none', width: 'fit-content', margin: 0 }}
+                                >
+                                    <Download size={15}/> Download Scraping Notebook (.ipynb)
+                                </a>
                             </div>
-                            <a
-                                href="/notebook/manufacturing_atlas_scraping_pipeline.ipynb"
-                                download="manufacturing_atlas_scraping_pipeline.ipynb"
-                                className="button"
-                                style={{ textDecoration: 'none' }}
-                            >
-                                <Download size={15}/> Download Scraping Notebook (.ipynb)
-                            </a>
+                            <div className="panel" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '14px', background: '#f0f5ff', border: '1px solid #c7d8fa' }}>
+                                <div>
+                                    <h3 style={{ margin: '0 0 4px', fontSize: '15px', fontWeight: 600, color: '#142e65' }}>End-to-End RAG Architecture & Pipeline</h3>
+                                    <p style={{ margin: 0, fontSize: '13px', color: '#4d6185' }}>Comprehensive notebook demonstrating Document Loading, Sliding-Window Chunking, Embeddings, Hybrid BM25+Dense RRF Retrieval, Grounded Generation, Evaluation & Drift Monitoring.</p>
+                                </div>
+                                <a
+                                    href="/notebook/manufacturing_atlas_rag_pipeline.ipynb"
+                                    download="manufacturing_atlas_rag_pipeline.ipynb"
+                                    className="button"
+                                    style={{ textDecoration: 'none', width: 'fit-content', margin: 0 }}
+                                >
+                                    <Download size={15}/> Download RAG Pipeline (.ipynb)
+                                </a>
+                            </div>
                         </div>
                         <section className="panel quality-panel">
                             <h2>Quality gates for a production pipeline</h2>
