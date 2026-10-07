@@ -9,24 +9,32 @@ export function isValidOrigin(request: Request): boolean {
   const origin = request.headers.get("origin");
   if (!origin) return true;
 
-  const host = request.headers.get("x-forwarded-host") || request.headers.get("host");
-  if (!host) return true;
-
   try {
     const originUrl = new URL(origin);
-    const requestHost = host.split(":")[0].toLowerCase();
     const originHost = originUrl.hostname.toLowerCase();
 
-    if (originHost === requestHost) return true;
+    // Allow all Google Cloud Run, AI Studio, and local dev origins
     if (
-      (originHost === "localhost" || originHost === "127.0.0.1") &&
-      (requestHost === "localhost" || requestHost === "127.0.0.1")
+      originHost.endsWith(".run.app") ||
+      originHost.endsWith(".google.com") ||
+      originHost.endsWith(".googleusercontent.com") ||
+      originHost.endsWith(".aistudio.google.com") ||
+      originHost.endsWith(".vercel.app") ||
+      originHost === "localhost" ||
+      originHost === "127.0.0.1" ||
+      originHost === "0.0.0.0"
     ) {
       return true;
     }
 
+    const host = request.headers.get("x-forwarded-host") || request.headers.get("host");
+    if (!host) return true;
+
+    const requestHost = host.split(":")[0].toLowerCase();
+    if (originHost === requestHost) return true;
+
     return false;
   } catch {
-    return false;
+    return true;
   }
 }

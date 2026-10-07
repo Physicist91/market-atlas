@@ -96,19 +96,26 @@ export default function Home() {
         setError('');
         try {
             const r = await fetch('/api/sources', { method });
-            if (!r.ok) {
-                let errorMsg = 'Collection failed';
-                try {
-                    const d = await r.json();
-                    if (d?.error) errorMsg = d.error;
-                } catch {
-                    errorMsg = `Server error (${r.status})`;
+            const rawText = await r.text();
+            let d: any;
+            try {
+                d = JSON.parse(rawText);
+            } catch {
+                if (!r.ok) {
+                    throw new Error(`Collection failed with status ${r.status}`);
                 }
+                throw new Error('Received unexpected non-JSON response during collection.');
+            }
+
+            if (!r.ok) {
+                const errorMsg = d?.error || `Collection failed (${r.status})`;
                 throw new Error(errorMsg);
             }
-            const d: any = await r.json();
-            setSources(d.sources);
-            setCheckedAt(d.checkedAt);
+
+            if (d && Array.isArray(d.sources)) {
+                setSources(d.sources);
+                setCheckedAt(d.checkedAt || null);
+            }
         } catch (e) {
             setError(e instanceof Error ? e.message : 'Sources unavailable. Baseline retained.');
         } finally {
@@ -149,17 +156,22 @@ export default function Home() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ question: q, topic: t, model: m })
             });
-            if (!r.ok) {
-                let errorMsg = 'Research request failed';
-                try {
-                    const d = await r.json();
-                    if (d?.error) errorMsg = d.error;
-                } catch {
-                    errorMsg = `Server error (${r.status})`;
+            const rawText = await r.text();
+            let d: any;
+            try {
+                d = JSON.parse(rawText);
+            } catch {
+                if (!r.ok) {
+                    throw new Error(`Server returned status ${r.status}`);
                 }
+                throw new Error('Received unexpected non-JSON response from server.');
+            }
+
+            if (!r.ok) {
+                const errorMsg = d?.error || `Server error (${r.status})`;
                 throw new Error(errorMsg);
             }
-            const d: any = await r.json();
+
             setAnswer(d);
             return d;
         } catch (e) {
